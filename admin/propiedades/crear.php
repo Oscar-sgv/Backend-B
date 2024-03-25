@@ -52,26 +52,31 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     if (!$estacionamiento) {
         $errores[] = "El numero de lugares de estacionamiento es obligatorio";
     }
+    if (!$vendedores_id) {
+        $errores[] = 'Elige un vendedor';
+    }
 
-    echo "<pre>";
-    var_dump($errores);
-    echo "</pre>";
+    // echo "<pre>";
+    // var_dump($errores);
+    // echo "</pre>";
 
-    exit;
+    // Revisar que el arreglo de errores este vacio para enviar los datos a la base 
 
+    if (empty($errores)) {
 
-    // Insertar en la base de datos
-    $query = " INSERT INTO propiedades(titulo,precio,descripcion,habitaciones,wc,estacionamiento,vendedores_id)
+        // Insertar en la base de datos
+        $query = " INSERT INTO propiedades(titulo,precio,descripcion,habitaciones,wc,estacionamiento,vendedores_id)
     VALUES ('$titulo','$precio','$descripcion','$habitaciones','$wc','$estacionamiento','$vendedores_id')";
 
 
-    // probando que el $query guarde los datos para ingresarlos a la base de datos
-    // echo $query;
+        // probando que el $query guarde los datos para ingresarlos a la base de datos
+        // echo $query;
 
-    $resultado = mysqli_query($db, $query);
+        $resultado = mysqli_query($db, $query);
 
-    if ($resultado) {
-        echo "Insertado correctamente";
+        if ($resultado) {
+            echo "Insertado correctamente";
+        }
     }
 }
 
@@ -84,6 +89,16 @@ incluirTemplate('header');
     <h1>Crear</h1>
 
     <a href="../index.php" class="boton boton-verde">volver</a>
+
+
+    <!-- // Mostrando errores o alertas al usuario -->
+    <?php foreach ($errores as $error) : ?>
+        <div class="alerta error">
+            <?php echo $error; ?>
+        </div>
+    <?php endforeach; ?>
+
+
 
     <!-- POST para enviar datos de forma segura por lo general se utiliza para enviar datos a un servidor -->
     <!-- GET para obtener los datos y mostrarlos en la url  por lo general se usa para obtener datos de un servidor -->
@@ -127,6 +142,7 @@ incluirTemplate('header');
             <legend>Vendedor</legend>
 
             <select name="vendedores_id">
+                <option value="">--Seleccione--</option>
                 <option value="1">Oscar</option>
                 <option value="2">Karen</option>
             </select>
